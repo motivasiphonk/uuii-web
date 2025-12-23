@@ -154,15 +154,48 @@ contactForm.addEventListener('submit', (e) => {
     
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
-    const subject = document.getElementById('subject').value;
-    const message = document.getElementById('message').value;
     
-    // Show success message
-    alert(`Terima kasih, ${name}! Pesan Anda telah diterima. Kami akan segera menghubungi Anda melalui email ${email}.`);
+    // Show success notification
+    showNotification(`Terima kasih, ${name}! Pesan Anda telah diterima. Kami akan segera menghubungi Anda melalui email ${email}.`, 'success');
     
     // Reset form
     contactForm.reset();
 });
+
+// Notification function
+function showNotification(message, type = 'success') {
+    // Remove existing notifications
+    const existingNotification = document.querySelector('.notification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+    
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background-color: ${type === 'success' ? '#10b981' : '#ef4444'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 3000;
+        max-width: 400px;
+        animation: slideInRight 0.3s ease-out;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Remove after 5 seconds
+    setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease-out';
+        setTimeout(() => notification.remove(), 300);
+    }, 5000);
+}
 
 // Add active class to navigation on scroll
 let sections = document.querySelectorAll('section');
@@ -227,6 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentYear = new Date().getFullYear();
     const footerText = document.querySelector('.footer-bottom p');
     if (footerText) {
-        footerText.textContent = footerText.textContent.replace('2024', currentYear);
+        // Replace any 4-digit year with current year
+        footerText.textContent = footerText.textContent.replace(/\b\d{4}\b/, currentYear);
     }
 });
